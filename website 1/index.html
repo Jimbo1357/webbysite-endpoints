@@ -1,1 +1,55 @@
-hi
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monaco Editor - VS Light Theme</title>
+    <style>
+        /* Reset margins and set the container to fill the screen */
+        body { 
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden; 
+            background-color: #ffffff;
+        }
+        #editor-container { 
+            width: 100vw; 
+            height: 100vh; 
+        }
+    </style>
+</head>
+<body>
+    <div id="editor-container"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
+    
+    <script>
+        // 2. Configure the loader to point to the Monaco files on the CDN
+        require.config({ 
+            paths: { 
+                'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' 
+            } 
+        });
+
+        // 3. Load the main editor module and initialize the editor instance
+        require(['vs/editor/editor.main'], function () {
+            const editor = monaco.editor.create(document.getElementById('editor-container'), {
+                value: [
+                    '// Welcome to the Monaco Editor',
+                    'function greet() {',
+                    '\tconsole.log("Hello, Visual Studio Light Theme!");',
+                    '}',
+                    '',
+                    'greet();'
+                ].join('\n'),
+                language: 'javascript',
+                theme: 'vs',           // 'vs' is the standard light theme
+                automaticLayout: true, // Ensures the editor resizes automatically with the window
+                minimap: {
+                    enabled: true      // Shows the code minimap on the right
+                }
+            });
+        });
+    </script>
+</body>
+</html>

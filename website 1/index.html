@@ -1,200 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Monaco Editor</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: #ffffff;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
-      font-family: 'Segoe UI', sans-serif;
-    }
-    #toolbar {
-      background: #f3f3f3;
-      border-bottom: 1px solid #d4d4d4;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      padding: 0 8px;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-    #lang-select {
-      font-size: 12px;
-      font-family: 'Segoe UI', sans-serif;
-      background: #ffffff;
-      color: #1e1e1e;
-      border: 1px solid #c8c8c8;
-      padding: 2px 22px 2px 6px;
-      height: 22px;
-      border-radius: 0;
-      cursor: pointer;
-      appearance: none;
-      -webkit-appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23616161'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 6px center;
-      min-width: 180px;
-    }
-    #lang-select:hover { border-color: #0078d4; }
-    #lang-select:focus { outline: 1px solid #0078d4; outline-offset: -1px; }
-    #editor { flex: 1; width: 100%; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My First Webpage</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 50px;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        button {
+            background-color: #0078d7;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #005ea6;
+        }
+    </style>
 </head>
 <body>
-  <div id="toolbar">
-    <select id="lang-select"></select>
-  </div>
-  <div id="editor"></div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
-  <script>
-    const LANGUAGES = [
-      { id: 'plaintext',        label: 'Plain Text' },
-      { id: 'abap',             label: 'ABAP' },
-      { id: 'apex',             label: 'Apex' },
-      { id: 'azcli',            label: 'Azure CLI' },
-      { id: 'bat',              label: 'Batch' },
-      { id: 'bicep',            label: 'Bicep' },
-      { id: 'c',                label: 'C' },
-      { id: 'clojure',          label: 'Clojure' },
-      { id: 'coffeescript',     label: 'CoffeeScript' },
-      { id: 'cpp',              label: 'C++' },
-      { id: 'csharp',           label: 'C#' },
-      { id: 'css',              label: 'CSS' },
-      { id: 'dart',             label: 'Dart' },
-      { id: 'dockerfile',       label: 'Dockerfile' },
-      { id: 'elixir',           label: 'Elixir' },
-      { id: 'fsharp',           label: 'F#' },
-      { id: 'go',               label: 'Go' },
-      { id: 'graphql',          label: 'GraphQL' },
-      { id: 'handlebars',       label: 'Handlebars' },
-      { id: 'hcl',              label: 'HCL / Terraform' },
-      { id: 'html',             label: 'HTML' },
-      { id: 'ini',              label: 'INI' },
-      { id: 'java',             label: 'Java' },
-      { id: 'javascript',       label: 'JavaScript' },
-      { id: 'json',             label: 'JSON' },
-      { id: 'julia',            label: 'Julia' },
-      { id: 'kotlin',           label: 'Kotlin' },
-      { id: 'less',             label: 'Less' },
-      { id: 'lua',              label: 'Lua' },
-      { id: 'markdown',         label: 'Markdown' },
-      { id: 'msdax',            label: 'DAX (Power BI)' },
-      { id: 'mysql',            label: 'MySQL' },
-      { id: 'objective-c',      label: 'Objective-C' },
-      { id: 'pascal',           label: 'Pascal' },
-      { id: 'perl',             label: 'Perl' },
-      { id: 'pgsql',            label: 'PostgreSQL' },
-      { id: 'php',              label: 'PHP' },
-      { id: 'powerquery',       label: 'Power Query M' },
-      { id: 'powershell',       label: 'PowerShell' },
-      { id: 'proto',            label: 'Protocol Buffers' },
-      { id: 'pug',              label: 'Pug' },
-      { id: 'python',           label: 'Python' },
-      { id: 'qsharp',           label: 'Q#' },
-      { id: 'r',                label: 'R' },
-      { id: 'razor',            label: 'Razor' },
-      { id: 'redis',            label: 'Redis' },
-      { id: 'restructuredtext', label: 'reStructuredText' },
-      { id: 'ruby',             label: 'Ruby' },
-      { id: 'rust',             label: 'Rust' },
-      { id: 'scala',            label: 'Scala' },
-      { id: 'scheme',           label: 'Scheme' },
-      { id: 'scss',             label: 'SCSS' },
-      { id: 'shell',            label: 'Shell / Bash' },
-      { id: 'sol',              label: 'Solidity' },
-      { id: 'sparql',           label: 'SPARQL' },
-      { id: 'sql',              label: 'SQL' },
-      { id: 'swift',            label: 'Swift' },
-      { id: 'systemverilog',    label: 'SystemVerilog' },
-      { id: 'tcl',              label: 'Tcl' },
-      { id: 'twig',             label: 'Twig' },
-      { id: 'typescript',       label: 'TypeScript' },
-      { id: 'vb',               label: 'Visual Basic' },
-      { id: 'verilog',          label: 'Verilog' },
-      { id: 'xml',              label: 'XML' },
-      { id: 'yaml',             label: 'YAML' },
-    ];
+    <div class="container">
+        <h1>Welcome to My Website</h1>
+        <p>This is a simple HTML webpage example.</p>
 
-    const sel = document.getElementById('lang-select');
-    LANGUAGES.forEach(l => {
-      const o = document.createElement('option');
-      o.value = l.id;
-      o.textContent = l.label;
-      sel.appendChild(o);
-    });
+        <button onclick="showMessage()">
+            Click Me
+        </button>
 
-    let editor;
+        <p id="message"></p>
+    </div>
 
-    require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' } });
-    require(['vs/editor/editor.main'], () => {
-      editor = monaco.editor.create(document.getElementById('editor'), {
-        value: '',
-        language: 'plaintext',
-        theme: 'vs',
-        fontSize: 14,
-        fontFamily: "'Cascadia Code', Consolas, 'Courier New', monospace",
-        fontLigatures: true,
-        lineNumbers: 'on',
-        minimap: { enabled: true },
-        scrollBeyondLastLine: false,
-        automaticLayout: true,
-        wordWrap: 'off',
-        tabSize: 4,
-        insertSpaces: true,
-        renderWhitespace: 'selection',
-        folding: true,
-        bracketPairColorization: { enabled: true },
-        guides: { bracketPairs: true, indentation: true },
-        smoothScrolling: true,
-        cursorBlinking: 'phase',
-        cursorSmoothCaretAnimation: 'on',
-        renderLineHighlight: 'line',
-      });
+    <script>
+        function showMessage() {
+            document.getElementById("message").innerHTML =
+                "Hello! JavaScript is working.";
+        }
+    </script>
 
-      sel.addEventListener('change', () => {
-        monaco.editor.setModelLanguage(editor.getModel(), sel.value);
-      });
-
-      // WinForms bridge
-      window.monacoGetContent      = ()   => editor.getValue();
-      window.monacoSetContent      = (v)  => editor.setValue(v);
-      window.monacoSetLanguage     = (id) => { monaco.editor.setModelLanguage(editor.getModel(), id); sel.value = id; };
-      window.monacoGetLanguage     = ()   => sel.value;
-      window.monacoGetSelectedText = ()   => editor.getModel().getValueInRange(editor.getSelection());
-      window.monacoInsertText      = (t)  => editor.executeEdits('', [{ range: editor.getSelection(), text: t }]);
-
-      // -----------------------------------------------------------------
-      // WebView2 Communication Bridge
-      // -----------------------------------------------------------------
-      if (window.chrome && window.chrome.webview) {
-        window.chrome.webview.addEventListener('message', e => {
-          try {
-            // Safely handle both objects (from PostWebMessageAsJson) and strings
-            const msg = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
-            
-            if (msg.action === 'setContent')  monacoSetContent(msg.code);
-            if (msg.action === 'setLanguage') monacoSetLanguage(msg.language);
-            
-            if (msg.action === 'getContent') {
-                // Post the raw object back to C#. WebView2 formats it to JSON automatically.
-                window.chrome.webview.postMessage({ 
-                    code: editor.getValue(), 
-                    language: sel.value 
-                });
-            }
-          } catch (err) {
-              console.error("WebView2 Bridge Error:", err);
-          }
-        });
-      }
-    });
-  </script>
 </body>
 </html>

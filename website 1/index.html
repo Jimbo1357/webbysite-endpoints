@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monaco Editor - Language Switcher</title>
+    <title>Monaco Editor - AutoComplete & Languages</title>
     <style>
         body { 
             margin: 0; 
@@ -12,8 +12,6 @@
             background-color: #ffffff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
-        /* Style for the top toolbar */
         #toolbar {
             height: 40px;
             background-color: #f3f3f3;
@@ -22,14 +20,11 @@
             align-items: center;
             padding: 0 15px;
         }
-
         #language-select {
             margin-left: 10px;
             padding: 4px 8px;
             font-size: 14px;
         }
-
-        /* Adjust the editor height to account for the 40px toolbar */
         #editor-container { 
             width: 100vw; 
             height: calc(100vh - 41px); 
@@ -46,6 +41,9 @@
             <option value="html">HTML</option>
             <option value="css">CSS</option>
             <option value="json">JSON</option>
+            <option value="java">Java</option>
+            <option value="cpp">C++</option>
+            <option value="sql">SQL</option>
         </select>
     </div>
 
@@ -58,13 +56,71 @@
             paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' } 
         });
 
+        // 1. THE WORKER PROXY FIX
+        // This allows Monaco's built-in HTML/CSS/JSON IntelliSense to work over a CDN
+        window.MonacoEnvironment = {
+            getWorkerUrl: function(workerId, label) {
+                const proxyScript = `
+                    self.MonacoEnvironment = { baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/' };
+                    importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/base/worker/workerMain.js');
+                `;
+                return URL.createObjectURL(new Blob([proxyScript], { type: 'text/javascript' }));
+            }
+        };
+
         require(['vs/editor/editor.main'], function () {
-            // 1. Create the editor
+
+            // 2. CUSTOM AUTO-COMPLETE FOR PYTHON
+            // This injects snippets and keywords when the user types in Python mode
+            monaco.languages.registerCompletionItemProvider('python', {
+                provideCompletionItems: function(model, position) {
+                    
+                    // Find out what word the user is currently typing to replace it properly
+                    const word = model.getWordUntilPosition(position);
+                    const range = {
+                        startLineNumber: position.lineNumber,
+                        endLineNumber: position.lineNumber,
+                        startColumn: word.startColumn,
+                        endColumn: word.endColumn
+                    };
+
+                    return {
+                        suggestions: [
+                            {
+                                label: 'print',
+                                kind: monaco.languages.CompletionItemKind.Function,
+                                insertText: 'print(${1:text})',
+                                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                                documentation: 'Prints data to the standard output device.',
+                                range: range
+                            },
+                            {
+                                label: 'def',
+                                kind: monaco.languages.CompletionItemKind.Keyword,
+                                insertText: 'def ${1:function_name}(${2:args}):\n\t${3:pass}',
+                                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                                documentation: 'Define a new Python function.',
+                                range: range
+                            },
+                            {
+                                label: 'import',
+                                kind: monaco.languages.CompletionItemKind.Keyword,
+                                insertText: 'import ',
+                                documentation: 'Import a module into the current namespace.',
+                                range: range
+                            }
+                        ]
+                    };
+                }
+            });
+
+            // 3. INITIALIZE THE EDITOR
             const editor = monaco.editor.create(document.getElementById('editor-container'), {
                 value: [
-                    '// Select a language from the dropdown above',
+                    '// Switch to Python to see custom auto-complete (type "def" or "print")',
+                    '// Switch to HTML/CSS to see native auto-complete',
                     'function greet() {',
-                    '\tconsole.log("Hello, Visual Studio Light Theme!");',
+                    '\tconsole.log("Hello, World!");',
                     '}',
                     '',
                     'greet();'
@@ -74,14 +130,9 @@
                 automaticLayout: true
             });
 
-            // 2. Add Event Listener to the dropdown
-            const languageSelect = document.getElementById('language-select');
-            
-            languageSelect.addEventListener('change', (event) => {
-                const newLanguage = event.target.value;
-                
-                // 3. Update the Monaco Editor's language model
-                monaco.editor.setModelLanguage(editor.getModel(), newLanguage);
+            // 4. LANGUAGE SWITCHER LOGIC
+            document.getElementById('language-select').addEventListener('change', (event) => {
+                monaco.editor.setModelLanguage(editor.getModel(), event.target.value);
             });
         });
     </script>

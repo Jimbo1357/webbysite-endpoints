@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All About Labrador Retrievers</title>
+
+    <style>
+        /* Modern Reset and Box-Sizing */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #fdfaf6; /* Warm cream background */
+            color: #3e2723; /* Dark brown text for a warm feel */
+            margin: 0;
+            padding: 40px 15px;
+            overflow-x: hidden; /* Prevent horizontal scrollbars from drifting emojis */
+            -webkit-tap-highlight-color: transparent; /* Smooth touch interaction on mobile */
+        }
+
+        .container {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 15px;
+            max-width: 650px;
+            margin: auto;
+            box-shadow: 0 4px 20px rgba(93, 64, 55, 0.15); /* Soft brown-toned shadow */
+            position: relative;
+            z-index: 1; /* Keeps container above the falling background emojis */
+        }
+
+        h1 {
+            color: #8d6e63; /* Friendly warm brown */
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #795548;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        .lab-photo {
+            display: block;
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            margin: 0 auto 25px auto;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #4e342e;
+        }
+
+        /* Information Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+
+        .info-card {
+            background: #efebe9; /* Very light warm grey/brown */
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #4e342e;
+            border-left: 4px solid #8d6e63;
+            text-align: left;
+        }
+
+        .info-card strong {
+            display: block;
+            color: #5d4037;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+
+        /* Interactive Button */
+        button {
+            background-color: #8d6e63;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 25px; /* Rounded, friendly look */
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(141, 110, 99, 0.3);
+            transition: transform 0.15s ease, background-color 0.3s ease;
+            outline: none;
+        }
+
+        /* Only apply hover scale effects on non-touch desktop browsers */
+        @media (hover: hover) {
+            button:hover {
+                background-color: #705246;
+                transform: scale(1.03);
+            }
+        }
+
+        /* Physical tactile feedback on click/tap */
+        button:active {
+            transform: scale(0.95);
+        }
+
+        #message {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2e7d32; /* Soft green success text */
+            min-height: 24px;
+        }
+
+        /* CSS FOR RAINBOW BUTTON */
+        .rainbow-button {
+            background-image: linear-gradient(to right,
+                #FF0000, /* Red */
+                #FF7F00, /* Orange */
+                #FFFF00, /* Yellow */
+                #00FF00, /* Green */
+                #0000FF, /* Blue */
+                #4B0082, /* Indigo */
+                #9400D3  /* Violet */
+            );
+            background-size: 400% 100%;
+            animation: rainbowAnimation 8s linear infinite;
+            color: white;
+            border: none;
+            background-color: transparent !important;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+        }
+
+        @keyframes rainbowAnimation {
+            0% { background-position: 0% 0%; }
+            100% { background-position: -300% 0%; }
+        }
+
+        .rainbow-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* CSS FOR FALLING EMOJIS */
+        .falling-emoji {
+            position: fixed;
+            top: -50px;
+            z-index: -1;
+            pointer-events: none;
+            user-select: none;
+            will-change: transform; /* Hardware optimization for mobile */
+            transform: translate3d(0, 0, 0); /* Forces GPU layer rendering */
+            animation-name: fallAnimation;
+            animation-timing-function: linear;
+            animation-iteration-count: 1;
+        }
+
+        @keyframes fallAnimation {
+            0% {
+                transform: translate3d(0, 0, 0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate3d(0, calc(100vh + 100px), 0) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #8d6e63;
+        }
+
+        /* RESPONSIVE DESIGN - MOBILE DEVICES */
+        @media (max-width: 480px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .container {
+                padding: 25px 15px;
+                border-radius: 12px;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .subtitle {
+                font-size: 0.95rem;
+                margin-bottom: 20px;
+            }
+
+            .intro-text {
+                font-size: 1rem;
+                line-height: 1.5;
+                margin-bottom: 20px;
+            }
+
+            /* Stack grid items vertically on small mobile screens */
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                margin-bottom: 25px;
+            }
+
+            .info-card {
+                padding: 12px;
+                border-left-width: 5px;
+            }
+
+            button {
+                width: 100%; /* Easy-to-tap full-width button on mobile */
+                padding: 15px 20px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="container">
+        <header>
+            <h1>The Lovable Labrador Retriever</h1>
+            <div class="subtitle">Friendly, Loyal, and Playful Companions</div>
+        </header>
+
+        <!-- The Labrador photo (lazy loaded for speed) -->
+        <img src="https://images.pexels.com/photos/9123770/pexels-photo-9123770.jpeg" alt="Cute Labrador Puppy looking up" class="lab-photo" loading="lazy">
+
+        <section class="intro-text">
+            Labradors are consistently ranked among the world's most popular dog breeds. 
+            Known for their gentle, outgoing nature, stellar intelligence, and boundless energy, 
+            they make incredible family pets, reliable therapy companions, and excellent hiking buddies!
+        </section>
+
+        <!-- Breed Quick Facts Grid -->
+        <section class="info-grid" aria-label="Quick Breed Facts">
+            <div class="info-card">
+                <strong>Temperament</strong>
+                Friendly, eager to please, and highly social.
+            </div>
+            <div class="info-card">
+                <strong>Breed Colors</strong>
+                Yellow, Chocolate, and Black.
+            </div>
+            <div class="info-card">
+                <strong>Fun Fact</strong>
+                They have webbed paws and a water-resistant coat, making them fantastic swimmers!
+            </div>
+        </section>
+
+        <!-- Interactive Dog Button -->
+        <button id="treat-btn" onclick="showMessage(this)">
+            <span>Give This Good Dog a Treat! 🦴</span>
+        </button>
+
+        <p id="message" role="status" aria-live="polite"></p>
+    </main>
+
+    <footer>
+        Made with ❤️ for Labrador lovers
+    </footer>
+
+    <script>
+        // Performance configuration based on device capabilities
+        const isMobile = window.innerWidth <= 480 || ('ontouchstart' in window);
+        const spawnRate = isMobile ? 800 : 400; // Slower spawning on mobile to avoid CPU lag
+        const maxEmojisCount = isMobile ? 12 : 35; // Cap emoji count on screen for mobile
+        let activeEmojis = 0;
+
+        // Interactive response when the user clicks the button
+        function showMessage(buttonElement) {
+            document.getElementById("message").innerHTML =
+                "Woof! Thank you for the treat! You are now best friends! 🐶❤️";
+
+            // Add the 'rainbow-button' class to the clicked button
+            if (!buttonElement.classList.contains('rainbow-button')) {
+                buttonElement.classList.add('rainbow-button');
+            }
+
+            // Trigger an interactive burst of extra falling treats on click!
+            const burstCount = isMobile ? 5 : 10;
+            for (let i = 0; i < burstCount; i++) {
+                setTimeout(createFallingEmoji, i * 60);
+            }
+        }
+
+        // --- FALLING EMOJIS SYSTEM ---
+        function createFallingEmoji() {
+            // Check active count to keep browser running extremely smoothly
+            if (activeEmojis >= maxEmojisCount) return;
+
+            const emojis = ['🐶', '🐕', '🦴', '🐾', '❤️', '🥎', '🎾', '✨'];
+            const emojiElement = document.createElement('div');
+            activeEmojis++;
+            
+            emojiElement.classList.add('falling-emoji');
+            emojiElement.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            
+            // Randomize properties (scale size and positioning dynamically for mobile)
+            const startX = Math.random() * 95; // Keeps emojis safely inside the window bounds
+            const size = isMobile ? (Math.random() * 12 + 16) : (Math.random() * 20 + 18); // Smaller emojis on mobile
+            const duration = Math.random() * 5 + (isMobile ? 4 : 6); // Fast responsive fall
+            const opacity = Math.random() * 0.35 + 0.35; // Soft subtle backgrounds
+
+            // Apply styles to the emoji element
+            emojiElement.style.left = startX + 'vw';
+            emojiElement.style.fontSize = size + 'px';
+            emojiElement.style.animationDuration = duration + 's';
+            emojiElement.style.opacity = opacity;
+
+            document.body.appendChild(emojiElement);
+
+            // Clean up the emoji element once its animation concludes
+            setTimeout(() => {
+                emojiElement.remove();
+                activeEmojis--;
+            }, duration * 1000);
+        }
+
+        // Run background spawner
+        setInterval(createFallingEmoji, spawnRate);
+    </script>
+
+</body>
+</html>

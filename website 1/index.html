@@ -3,42 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My First Webpage</title>
+    <title>All About Labrador Retrievers</title>
 
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #f4f4f4;
+            background-color: #fdfaf6; /* Warm cream background */
+            color: #3e2723; /* Dark brown text for a warm feel */
             margin: 0;
-            padding: 50px;
+            padding: 50px 20px;
             overflow-x: hidden; /* Prevent horizontal scrollbars from drifting emojis */
         }
 
         .container {
             background: white;
-            padding: 30px;
-            border-radius: 10px;
-            max-width: 600px;
+            padding: 40px 30px;
+            border-radius: 15px;
+            max-width: 650px;
             margin: auto;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(93, 64, 55, 0.15); /* Soft brown-toned shadow */
             position: relative;
             z-index: 1; /* Keeps container above the falling background emojis */
         }
 
+        h1 {
+            color: #8d6e63; /* Friendly warm brown */
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #795548;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        .lab-photo {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            margin-bottom: 25px;
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #4e342e;
+        }
+
+        /* Information Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+
+        .info-card {
+            background: #efebe9; /* Very light warm grey/brown */
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #4e342e;
+            border-left: 4px solid #8d6e63;
+            text-align: left;
+        }
+
+        .info-card strong {
+            display: block;
+            color: #5d4037;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+
         button {
-            background-color: #0078d7;
+            background-color: #8d6e63;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 5px;
+            padding: 14px 28px;
+            border-radius: 25px; /* Rounded, friendly look */
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s ease; /* Smooth transition for default hover */
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(141, 110, 99, 0.3);
         }
 
         button:hover {
-            background-color: #005ea6;
+            background-color: #705246;
+            transform: scale(1.03);
+        }
+
+        #message {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2e7d32; /* Soft green success text */
+            min-height: 24px;
         }
 
         /* NEW CSS FOR RAINBOW BUTTON */
@@ -63,18 +129,16 @@
             background-color: transparent !important;
             /* No hover effect for the rainbow button, or define a new one */
             transition: none; /* Disable default transition for this state */
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
         }
 
         /* Define the animation for the rainbow effect */
         @keyframes rainbowAnimation {
             0% { background-position: 0% 0%; } /* Start position of the gradient */
             100% { background-position: -300% 0%; } /* End position (moves the gradient across) */
-            /* Explanation: background-size is 400% of button width.
-               To move the entire 400% gradient across, you need to shift it by 300% (400% - 100%)
-               of the button's width relative to its container. */
         }
 
-        /* Optional: Keep text visible against a dynamic background */
+        /* Keep text visible against a dynamic background */
         .rainbow-button span {
             position: relative;
             z-index: 1; /* Ensures text stays above the animated background */
@@ -109,46 +173,67 @@
 <body>
 
     <div class="container">
-        <h1>Welcome to My Website</h1>
-        <p>This is a simple HTML webpage example.</p>
+        <h1>The Lovable Labrador Retriever</h1>
+        <div class="subtitle">Friendly, Loyal, and Playful Companions</div>
 
-        <!-- Pass 'this' (the button element itself) to the function -->
+        <!-- The Labrador photo requested -->
+        <img src="https://images.pexels.com/photos/9123770/pexels-photo-9123770.jpeg" alt="Cute Labrador Puppy looking up" class="lab-photo">
+
+        <p class="intro-text">
+            Labradors are consistently ranked among the world's most popular dog breeds. 
+            Known for their gentle, outgoing nature, stellar intelligence, and boundless energy, 
+            they make incredible family pets, reliable therapy companions, and excellent hiking buddies!
+        </p>
+
+        <!-- Breed Quick Facts Grid -->
+        <div class="info-grid">
+            <div class="info-card">
+                <strong>Temperament</strong>
+                Friendly, eager to please, and highly social.
+            </div>
+            <div class="info-card">
+                <strong>Breed Colors</strong>
+                Yellow, Chocolate, and Black.
+            </div>
+            <div class="info-card">
+                <strong>Fun Fact</strong>
+                They have webbed paws and a water-resistant coat, making them fantastic swimmers!
+            </div>
+        </div>
+
+        <!-- Interactive Dog Button -->
         <button onclick="showMessage(this)">
-            <span>Click Me</span>
+            <span>Give This Good Dog a Treat! 🦴</span>
         </button>
 
         <p id="message"></p>
     </div>
 
     <script>
-        // The function now accepts the button element as an argument
+        // Interactive response when the user clicks the button
         function showMessage(buttonElement) {
             document.getElementById("message").innerHTML =
-                "Hello! JavaScript is working.";
+                "Woof! Thank you for the treat! You are now best friends! 🐶❤️";
 
             // Add the 'rainbow-button' class to the clicked button
             buttonElement.classList.add('rainbow-button');
-
-            // Optional: You might want to prevent the message from appearing
-            // every time if you intend for the button to only change color once.
-            // For now, it will keep displaying the message.
         }
 
-        // --- FALLING EMOJIS SYSTEM ---
+        // --- FALLING EMOJIS SYSTEM (Theme: Dogs, Treats, and Hearts!) ---
         function createFallingEmoji() {
-            // Feel free to add or change emojis in this list!
-            const emojis = ['🎈', '✨', '🎉', '⭐', '🌈', '🌸', '🚀', '🍕', '🐱', '🦄', '💖', '🍿'];
+            // Dog-friendly emojis to float down the screen
+            const emojis = ['🐶', '🐕', '🦴', '🐾', '❤️', '🥎', '🎾', '✨'];
             const emojiElement = document.createElement('div');
             
             emojiElement.classList.add('falling-emoji');
-            // Pick a random emoji from our list
+            // Pick a random emoji from our dog list
             emojiElement.innerText = emojis[Math.floor(Math.random() * emojis.length)];
             
             // Randomize properties to make the fall look natural
             const startX = Math.random() * 100; // Horizontal position: 0vw to 100vw
-            const size = Math.random() * 20 + 16; // Random size between 16px and 36px
+            const size = Math.random() * 20 + 18; // Random size between 18px and 38px
             const duration = Math.random() * 6 + 6; // Random fall speed between 6 and 12 seconds
-            const opacity = Math.random() * 0.4 + 0.3; // Random opacity (0.3 to 0.7) so it stays subtle in the background
+            const opacity = Math.random() * 0.4 + 0.35; // Random subtle opacity (0.35 to 0.75)
 
             // Apply styles to the emoji element
             emojiElement.style.left = startX + 'vw';
@@ -164,7 +249,7 @@
             }, duration * 1000);
         }
 
-        // Spawn a new falling emoji every 400 milliseconds
+        // Spawn a new falling dog emoji/treat every 400 milliseconds
         setInterval(createFallingEmoji, 400);
     </script>
 

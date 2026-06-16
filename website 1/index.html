@@ -57,7 +57,6 @@
         });
 
         // 1. THE WORKER PROXY FIX
-        // This allows Monaco's built-in HTML/CSS/JSON IntelliSense to work over a CDN
         window.MonacoEnvironment = {
             getWorkerUrl: function(workerId, label) {
                 const proxyScript = `
@@ -68,14 +67,14 @@
             }
         };
 
+        // WINFORMS COMPATIBILITY: Declare editor globally so functions outside 'require' can reach it
+        let editor;
+
         require(['vs/editor/editor.main'], function () {
 
             // 2. CUSTOM AUTO-COMPLETE FOR PYTHON
-            // This injects snippets and keywords when the user types in Python mode
             monaco.languages.registerCompletionItemProvider('python', {
                 provideCompletionItems: function(model, position) {
-                    
-                    // Find out what word the user is currently typing to replace it properly
                     const word = model.getWordUntilPosition(position);
                     const range = {
                         startLineNumber: position.lineNumber,
@@ -115,7 +114,7 @@
             });
 
             // 3. INITIALIZE THE EDITOR
-            const editor = monaco.editor.create(document.getElementById('editor-container'), {
+            editor = monaco.editor.create(document.getElementById('editor-container'), {
                 value: [
                     '// Switch to Python to see custom auto-complete (type "def" or "print")',
                     '// Switch to HTML/CSS to see native auto-complete',
@@ -130,11 +129,19 @@
                 automaticLayout: true
             });
 
-            // 4. LANGUAGE SWITCHER LOGIC
+            // 4. LOCAL LANGUAGE SWITCHER LOGIC (Web Dropdown)
             document.getElementById('language-select').addEventListener('change', (event) => {
                 monaco.editor.setModelLanguage(editor.getModel(), event.target.value);
             });
         });
+
+        // 5. WINFORMS SCRIPT BRIDGE: This is called by WinForms button1_Click
+        function getEditorContent() {
+            if (editor) {
+                // Sends text data safely back to CoreWebView2_WebMessageReceived in C#
+                window.chrome.webview.postMessage(editor.getValue());
+            }
+        }
     </script>
 </body>
 </html>

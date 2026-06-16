@@ -1,3 +1,4 @@
+html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,11 +32,52 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
+            transition: background-color 0.3s ease; /* Smooth transition for default hover */
         }
 
         button:hover {
             background-color: #005ea6;
         }
+
+        /* NEW CSS FOR RAINBOW BUTTON */
+        .rainbow-button {
+            /* Define a background gradient with multiple colors */
+            background-image: linear-gradient(to right,
+                #FF0000, /* Red */
+                #FF7F00, /* Orange */
+                #FFFF00, /* Yellow */
+                #00FF00, /* Green */
+                #0000FF, /* Blue */
+                #4B0082, /* Indigo */
+                #9400D3  /* Violet */
+            );
+            /* Make the background much wider than the button to allow movement */
+            background-size: 400% 100%;
+            /* Animation: name, duration, timing, iteration-count */
+            animation: rainbowAnimation 8s linear infinite; /* Adjust duration as needed */
+            color: white; /* Ensure text is visible over rainbow */
+            border: none; /* Override any default button border */
+            /* Ensure the gradient takes precedence over background-color */
+            background-color: transparent !important;
+            /* No hover effect for the rainbow button, or define a new one */
+            transition: none; /* Disable default transition for this state */
+        }
+
+        /* Define the animation for the rainbow effect */
+        @keyframes rainbowAnimation {
+            0% { background-position: 0% 0%; } /* Start position of the gradient */
+            100% { background-position: -300% 0%; } /* End position (moves the gradient across) */
+            /* Explanation: background-size is 400% of button width.
+               To move the entire 400% gradient across, you need to shift it by 300% (400% - 100%)
+               of the button's width relative to its container. */
+        }
+
+        /* Optional: Keep text visible against a dynamic background */
+        .rainbow-button span {
+            position: relative;
+            z-index: 1; /* Ensures text stays above the animated background */
+        }
+
     </style>
 </head>
 <body>
@@ -44,17 +86,26 @@
         <h1>Welcome to My Website</h1>
         <p>This is a simple HTML webpage example.</p>
 
-        <button onclick="showMessage()">
-            Click Me
+        <!-- Pass 'this' (the button element itself) to the function -->
+        <button onclick="showMessage(this)">
+            <span>Click Me</span>
         </button>
 
         <p id="message"></p>
     </div>
 
     <script>
-        function showMessage() {
+        // The function now accepts the button element as an argument
+        function showMessage(buttonElement) {
             document.getElementById("message").innerHTML =
                 "Hello! JavaScript is working.";
+
+            // Add the 'rainbow-button' class to the clicked button
+            buttonElement.classList.add('rainbow-button');
+
+            // Optional: You might want to prevent the message from appearing
+            // every time if you intend for the button to only change color once.
+            // For now, it will keep displaying the message.
         }
     </script>
 

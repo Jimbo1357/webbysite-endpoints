@@ -3,39 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monaco Editor - VS Light Theme</title>
+    <title>Monaco Editor - Language Switcher</title>
     <style>
-        /* Reset margins and set the container to fill the screen */
         body { 
             margin: 0; 
             padding: 0; 
             overflow: hidden; 
             background-color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+        
+        /* Style for the top toolbar */
+        #toolbar {
+            height: 40px;
+            background-color: #f3f3f3;
+            border-bottom: 1px solid #e2e2e2;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+        }
+
+        #language-select {
+            margin-left: 10px;
+            padding: 4px 8px;
+            font-size: 14px;
+        }
+
+        /* Adjust the editor height to account for the 40px toolbar */
         #editor-container { 
             width: 100vw; 
-            height: 100vh; 
+            height: calc(100vh - 41px); 
         }
     </style>
 </head>
 <body>
+    
+    <div id="toolbar">
+        <label for="language-select"><strong>Language:</strong></label>
+        <select id="language-select">
+            <option value="javascript">JavaScript</option>
+            <option value="python">Python</option>
+            <option value="html">HTML</option>
+            <option value="css">CSS</option>
+            <option value="json">JSON</option>
+        </select>
+    </div>
+
     <div id="editor-container"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
     
     <script>
-        // 2. Configure the loader to point to the Monaco files on the CDN
         require.config({ 
-            paths: { 
-                'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' 
-            } 
+            paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' } 
         });
 
-        // 3. Load the main editor module and initialize the editor instance
         require(['vs/editor/editor.main'], function () {
+            // 1. Create the editor
             const editor = monaco.editor.create(document.getElementById('editor-container'), {
                 value: [
-                    '// Welcome to the Monaco Editor',
+                    '// Select a language from the dropdown above',
                     'function greet() {',
                     '\tconsole.log("Hello, Visual Studio Light Theme!");',
                     '}',
@@ -43,11 +70,18 @@
                     'greet();'
                 ].join('\n'),
                 language: 'javascript',
-                theme: 'vs',           // 'vs' is the standard light theme
-                automaticLayout: true, // Ensures the editor resizes automatically with the window
-                minimap: {
-                    enabled: true      // Shows the code minimap on the right
-                }
+                theme: 'vs',
+                automaticLayout: true
+            });
+
+            // 2. Add Event Listener to the dropdown
+            const languageSelect = document.getElementById('language-select');
+            
+            languageSelect.addEventListener('change', (event) => {
+                const newLanguage = event.target.value;
+                
+                // 3. Update the Monaco Editor's language model
+                monaco.editor.setModelLanguage(editor.getModel(), newLanguage);
             });
         });
     </script>
